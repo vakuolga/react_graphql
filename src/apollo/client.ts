@@ -16,10 +16,7 @@ const BASE_URL = 'https://staging.api.constellation.academy';
 export const getRefreshToken = async () => {
   const refreshToken = Cookies.get('refresh-token');
   const accountId = Cookies.get('secret');
-  if (!refreshToken || !accountId) {
-    console.log('Refresh token or account ID not available');
-    return '';
-  }
+  if (!refreshToken || !accountId) return '';
 
   try {
     const response = await fetch(`${BASE_URL}/api/refresh-token`, {
@@ -35,7 +32,6 @@ export const getRefreshToken = async () => {
     }
 
     const data = await response.json();
-    console.log('Refresh token success', data);
     store.dispatch(addJwtTokens(data));
     // Вернем новые токены
     return {
@@ -55,7 +51,6 @@ const httpLink = new HttpLink({
 
 const authLink = setContext(async (_, { headers }) => {
   const token = store.getState().auth.accessToken || (await getRefreshToken());
-  console.log('authLink', token);
   return {
     headers: {
       ...headers,
@@ -65,12 +60,10 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 const createErrorLink = () => {
-  return onError(({ graphQLErrors, networkError, operation, forward }) => {
+  return onError(({ graphQLErrors, operation, forward }) => {
     if (graphQLErrors) {
       graphQLErrors.forEach((err) => {
-        console.log('graphQLError', err);
-        if (err.extensions?.code === 'UNAUTHENTICATED') {
-          // Вернем Observable только в случае ошибки UNAUTHENTICATED
+        if (err.extensions?.code === 'jwt token expired') {
           return new Observable((observer) => {
             getRefreshToken()
               .then(
@@ -87,12 +80,10 @@ const createErrorLink = () => {
                     error: observer.error.bind(observer),
                     complete: observer.complete.bind(observer),
                   };
-                  // Повторим запрос с новыми токенами
                   forward(operation).subscribe(subscriber);
                 }
               )
               .catch((refreshError) => {
-                console.error('Error refreshing token:', refreshError);
                 observer.error(refreshError);
               });
           });
@@ -100,12 +91,6 @@ const createErrorLink = () => {
         return undefined;
       });
     }
-
-    if (networkError) {
-      console.log('Network error:', networkError);
-    }
-
-    // Вернем Observable даже вне условия UNAUTHENTICATED
     return new Observable((observer) => {
       const subscriber = {
         next: observer.next.bind(observer),
@@ -120,7 +105,7 @@ const createErrorLink = () => {
 const errorLink = createErrorLink();
 
 const client = new ApolloClient({
-  link: from([errorLink, authLink, /* retryLink, */ httpLink]),
+  link: from([errorLink, authLink, httpLink]),
   cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {

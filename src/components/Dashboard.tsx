@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { Button } from '@mui/material';
 import { useQuery } from '@apollo/client';
@@ -12,11 +11,12 @@ import client from '../apollo/client';
 import { UserData, Edge } from '../apollo/interfaces';
 import EdgesListMemo from './List';
 import useSortableList from '../hooks/useSortableList';
+import LoadingIndicator from './LoadingIndicator';
 
 function Dashboard() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const user = useAppSelector(userSelector); // get this from cache & compare to useParams() id?
+  const user = useAppSelector(userSelector);
   const bottom = useRef(null);
 
   const [isLoggedOut, setIsLoggedOut] = useState(false);
@@ -24,7 +24,7 @@ function Dashboard() {
     after: null | string;
     first: number;
   }
-  const { data, loading, fetchMore, error } = useQuery<
+  const { data, loading, fetchMore } = useQuery<
     UserData,
     UserNodesQueryVariables
   >(GET_USER_NODES, {
@@ -33,10 +33,9 @@ function Dashboard() {
       first: 10,
     },
   });
-  const { list, moveItem, setList } = useSortableList(
+  const { list, moveItem, setList } = useSortableList<Edge>(
     JSON.parse(localStorage.getItem('sortableList')) ||
-      data?.Admin.Tree.GetContentNodes.edges ||
-      []
+      data?.Admin.Tree.GetContentNodes.edges
   );
 
   const updateList = useCallback(
@@ -70,10 +69,8 @@ function Dashboard() {
         variables: { after, first: 10 },
         updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult) return previousResult;
-          console.log('updateQuery', previousResult, { fetchMoreResult });
 
           const newEdges = fetchMoreResult.Admin.Tree.GetContentNodes.edges;
-
           client.writeQuery({
             query: GET_USER_NODES,
             variables: { after, first: 10 },
@@ -151,8 +148,8 @@ function Dashboard() {
         Logout
       </Button>
       <h2>{user?.name || 'No username'}</h2>
-      <EdgesListMemo edges={list} moveItem={moveItem} />
-      {loading && 'Loading...'}
+      <EdgesListMemo edges={list && list} moveItem={moveItem} />
+      {loading && <LoadingIndicator />}
       <div ref={bottom} />
     </>
   );
