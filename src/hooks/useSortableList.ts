@@ -11,7 +11,6 @@ const useSortableList = <T>(initialList: T[]) => {
 
   const moveItem = (from: number, to: number) => {
     const updatedList = [...list];
-    console.log(from, to);
     const [movedItem] = updatedList.splice(from, 1);
     updatedList.splice(to, 0, movedItem);
     setList(updatedList);

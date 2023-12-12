@@ -24,7 +24,7 @@ function Dashboard() {
     after: null | string;
     first: number;
   }
-  const { data, loading, fetchMore } = useQuery<
+  const { data, loading, fetchMore, error } = useQuery<
     UserData,
     UserNodesQueryVariables
   >(GET_USER_NODES, {
@@ -34,7 +34,9 @@ function Dashboard() {
     },
   });
   const { list, moveItem, setList } = useSortableList(
-    data?.Admin.Tree.GetContentNodes.edges || []
+    JSON.parse(localStorage.getItem('sortableList')) ||
+      data?.Admin.Tree.GetContentNodes.edges ||
+      []
   );
 
   const updateList = useCallback(
@@ -68,6 +70,7 @@ function Dashboard() {
         variables: { after, first: 10 },
         updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult) return previousResult;
+          console.log('updateQuery', previousResult, { fetchMoreResult });
 
           const newEdges = fetchMoreResult.Admin.Tree.GetContentNodes.edges;
 
@@ -92,7 +95,7 @@ function Dashboard() {
               },
             },
           });
-          updateList(newEdges); // Обновление списка в Dashboard
+          updateList(newEdges);
           return {
             Admin: {
               ...previousResult.Admin,
@@ -135,6 +138,7 @@ function Dashboard() {
   const handleLogout = () => {
     dispatch(resetAll());
     Cookies.remove('refresh-token');
+    Cookies.remove('secret');
     client.resetStore();
     setIsLoggedOut(true);
     navigate('/login');

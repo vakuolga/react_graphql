@@ -16,7 +16,10 @@ const BASE_URL = 'https://staging.api.constellation.academy';
 export const getRefreshToken = async () => {
   const refreshToken = Cookies.get('refresh-token');
   const accountId = Cookies.get('secret');
-  if (!refreshToken || !accountId) return '';
+  if (!refreshToken || !accountId) {
+    console.log('Refresh token or account ID not available');
+    return '';
+  }
 
   try {
     const response = await fetch(`${BASE_URL}/api/refresh-token`, {
@@ -33,7 +36,7 @@ export const getRefreshToken = async () => {
 
     const data = await response.json();
     console.log('Refresh token success', data);
-    store.dispatch(addJwtTokens(data.Auth.loginJwt));
+    store.dispatch(addJwtTokens(data));
     // Вернем новые токены
     return {
       accessToken: data.accessToken,
@@ -52,6 +55,7 @@ const httpLink = new HttpLink({
 
 const authLink = setContext(async (_, { headers }) => {
   const token = store.getState().auth.accessToken || (await getRefreshToken());
+  console.log('authLink', token);
   return {
     headers: {
       ...headers,
@@ -69,22 +73,24 @@ const createErrorLink = () => {
           // Вернем Observable только в случае ошибки UNAUTHENTICATED
           return new Observable((observer) => {
             getRefreshToken()
-              .then((newTokens) => {
-                const oldHeaders = operation.getContext().headers;
-                operation.setContext({
-                  headers: {
-                    ...oldHeaders,
-                    authorization: newTokens.accessToken,
-                  },
-                });
-                const subscriber = {
-                  next: observer.next.bind(observer),
-                  error: observer.error.bind(observer),
-                  complete: observer.complete.bind(observer),
-                };
-                // Повторим запрос с новыми токенами
-                forward(operation).subscribe(subscriber);
-              })
+              .then(
+                (newTokens: { accessToken: string; refreshToken: string }) => {
+                  const oldHeaders = operation.getContext().headers;
+                  operation.setContext({
+                    headers: {
+                      ...oldHeaders,
+                      authorization: newTokens && newTokens.accessToken,
+                    },
+                  });
+                  const subscriber = {
+                    next: observer.next.bind(observer),
+                    error: observer.error.bind(observer),
+                    complete: observer.complete.bind(observer),
+                  };
+                  // Повторим запрос с новыми токенами
+                  forward(operation).subscribe(subscriber);
+                }
+              )
               .catch((refreshError) => {
                 console.error('Error refreshing token:', refreshError);
                 observer.error(refreshError);
