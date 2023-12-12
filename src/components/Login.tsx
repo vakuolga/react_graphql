@@ -22,6 +22,22 @@ function Login() {
     email: undefined,
     password: undefined,
   });
+  interface LoginData {
+    Auth: {
+      loginJwt: {
+        jwtTokens: {
+          accessToken: string;
+          refreshToken: string;
+        };
+      };
+    };
+  }
+  interface LoginQueryVariables {
+    loginJwtInput2: {
+      email: string;
+      password: string;
+    };
+  }
   const [getUser, { loading: userLoading, error: userError }] = useLazyQuery(
     GET_USER,
     {
@@ -31,28 +47,38 @@ function Login() {
       },
     }
   );
-  const [login, { loading: loginLoading, error: loginError }] = useMutation(
-    LOGIN,
-    {
-      variables: {
-        loginJwtInput2: {
-          email: formState.email,
-          password: formState.password,
-        },
+  const [login, { loading: loginLoading, error: loginError }] = useMutation<
+    LoginData,
+    LoginQueryVariables
+  >(LOGIN, {
+    variables: {
+      loginJwtInput2: {
+        email: formState.email,
+        password: formState.password,
       },
-      onCompleted: (loginData) => {
-        if (loginData) {
-          Cookies.set(
-            'access-token',
-            loginData.Auth.loginJwt.jwtTokens.accessToken || ''
-            // { httpOnly: true, secure: true }
-          );
-          dispatch(addJwtTokens(loginData.Auth.loginJwt.jwtTokens));
-        }
-      },
-    }
-  );
-
+    },
+    onError: (loginError) => {
+      if (
+        loginError.message.includes(
+          'auth_login_with_email_and_password_unspecified_auth'
+        )
+      ) {
+        setFormError('Error: Invalid credentials');
+      } else {
+        setFormError(`Error: ${loginError.message}`);
+      }
+    },
+    onCompleted: (loginData) => {
+      if (loginData) {
+        Cookies.set(
+          'refresh-token',
+          loginData.Auth.loginJwt.jwtTokens.refreshToken || ''
+          // { httpOnly: true, secure: true }
+        );
+        dispatch(addJwtTokens(loginData.Auth.loginJwt.jwtTokens));
+      }
+    },
+  });
   useEffect(() => {
     if (tokens.accessToken) getUser();
   }, [tokens, user, getUser, navigate]);
@@ -64,12 +90,6 @@ function Login() {
   }, [user, navigate]);
 
   if (userLoading) return <LoadingIndicator />;
-  if (loginError)
-    return (
-      <Typography variant="h5" display="block" color="error.main" gutterBottom>
-        Error Logging In
-      </Typography>
-    );
   if (userError)
     return (
       <Typography variant="h5" display="block" color="error.main" gutterBottom>

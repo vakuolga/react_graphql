@@ -37,7 +37,6 @@ function LoginForm(props: LoginFormProps) {
         label="Your E-Mail"
         variant="outlined"
         autoComplete="email"
-        helperText={!data.email && 'Enter your E-Mail'}
         onChange={(event: React.ChangeEvent) => {
           handleChangeEmail((event.target as HTMLInputElement).value);
         }}
@@ -49,7 +48,6 @@ function LoginForm(props: LoginFormProps) {
         label="Your Password"
         variant="outlined"
         autoComplete="current-password"
-        helperText={!data.password && 'Enter your Password'}
         onChange={(event: React.ChangeEvent) =>
           setData({
             ...data,

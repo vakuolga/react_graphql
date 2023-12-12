@@ -9,7 +9,7 @@ import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { userSelector } from '../redux/feature/userSlice';
 import resetAll from '../redux/feature/resetAllSlice';
 import client from '../apollo/client';
-import { UserData } from '../apollo/interfaces';
+import { UserData, Edge } from '../apollo/interfaces';
 import EdgesListMemo from './List';
 import useSortableList from '../hooks/useSortableList';
 
@@ -20,8 +20,14 @@ function Dashboard() {
   const bottom = useRef(null);
 
   const [isLoggedOut, setIsLoggedOut] = useState(false);
-
-  const { data, loading, fetchMore } = useQuery(GET_USER_NODES, {
+  interface UserNodesQueryVariables {
+    after: null | string;
+    first: number;
+  }
+  const { data, loading, fetchMore } = useQuery<
+    UserData,
+    UserNodesQueryVariables
+  >(GET_USER_NODES, {
     variables: {
       after: null,
       first: 10,
@@ -32,8 +38,7 @@ function Dashboard() {
   );
 
   const updateList = useCallback(
-    (newList) => {
-      // Обновление списка из loadMore()
+    (newList: Edge[]) => {
       setList((prevList) => [...prevList, ...newList]);
     },
     [setList]
@@ -115,7 +120,7 @@ function Dashboard() {
         if (!isLoggedOut) loadMore();
       }
     });
-    observer.observe(bottom.current);
+    if (bottom?.current) observer.observe(bottom.current);
     return () => {
       observer.disconnect();
     };
@@ -129,10 +134,11 @@ function Dashboard() {
 
   const handleLogout = () => {
     dispatch(resetAll());
-    Cookies.remove('access-token');
+    Cookies.remove('refresh-token');
     client.resetStore();
     setIsLoggedOut(true);
     navigate('/login');
+    localStorage.clear();
   };
 
   return (
@@ -141,7 +147,6 @@ function Dashboard() {
         Logout
       </Button>
       <h2>{user?.name || 'No username'}</h2>
-      {/* <EdgesListMemo edges={data && data.Admin.Tree.GetContentNodes.edges} /> */}
       <EdgesListMemo edges={list} moveItem={moveItem} />
       {loading && 'Loading...'}
       <div ref={bottom} />

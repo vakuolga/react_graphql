@@ -57,10 +57,11 @@ function DraggableEdge(props: DraggableEdgeProps) {
   drag(drop(dragRef));
 
   return (
-    <ListItem ref={dropRef} disablePadding sx={{ height: '30vh' }}>
-      <ListItemButton ref={dragRef}>
-        <ListItemText primary={edge.node.structureDefinition.title} />
-      </ListItemButton>
+    <ListItem ref={dropRef} disablePadding>
+      <ListItemText
+        ref={dragRef}
+        primary={edge.node.structureDefinition.title}
+      />
     </ListItem>
   );
 }

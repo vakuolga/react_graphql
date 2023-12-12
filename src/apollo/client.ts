@@ -9,12 +9,14 @@ import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
 import Cookies from 'js-cookie';
 import { store } from '../redux/store';
+import { addJwtTokens } from '../redux/feature/authSlice';
 
 const BASE_URL = 'https://staging.api.constellation.academy';
 
-const getRefreshToken = async () => {
-  const { refreshToken } = store.getState().auth;
-  const { id } = store.getState().user;
+export const getRefreshToken = async () => {
+  const refreshToken = Cookies.get('refresh-token');
+  const accountId = Cookies.get('secret');
+  if (!refreshToken || !accountId) return '';
 
   try {
     const response = await fetch(`${BASE_URL}/api/refresh-token`, {
@@ -22,7 +24,7 @@ const getRefreshToken = async () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ refreshToken, accountId: id }),
+      body: JSON.stringify({ refreshToken, accountId }),
     });
 
     if (!response.ok) {
@@ -31,7 +33,7 @@ const getRefreshToken = async () => {
 
     const data = await response.json();
     console.log('Refresh token success', data);
-
+    store.dispatch(addJwtTokens(data.Auth.loginJwt));
     // Вернем новые токены
     return {
       accessToken: data.accessToken,
@@ -48,12 +50,12 @@ const httpLink = new HttpLink({
   credentials: 'include',
 });
 
-const authLink = setContext((_, { headers }) => {
-  const token = Cookies.get('access-token');
+const authLink = setContext(async (_, { headers }) => {
+  const token = store.getState().auth.accessToken || (await getRefreshToken());
   return {
     headers: {
       ...headers,
-      authorization: token || '',
+      authorization: token,
     },
   };
 });
@@ -62,6 +64,7 @@ const createErrorLink = () => {
   return onError(({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
       graphQLErrors.forEach((err) => {
+        console.log('graphQLError', err);
         if (err.extensions?.code === 'UNAUTHENTICATED') {
           // Вернем Observable только в случае ошибки UNAUTHENTICATED
           return new Observable((observer) => {

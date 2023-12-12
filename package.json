@@ -17,6 +17,7 @@
     "@types/react-dnd": "^3.0.2",
     "graphql": "^16.8.1",
     "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
@@ -48,6 +49,7 @@
     "prettier": "^3.1.0",
     "typescript": "^5.2.2",
     "vite": "^5.0.0",
+    "vite-plugin-checker": "^0.6.2",
     "vitest": "^1.0.1"
   }
 }

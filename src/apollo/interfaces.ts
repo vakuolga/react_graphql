@@ -25,3 +25,12 @@ export interface UserData {
     };
   };
 }
+
+export interface AuthData {
+  Auth: {
+    loginJwt: {
+      accessToken: string;
+      refreshToken: string;
+    };
+  };
+}

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 import resetAll from './resetAllSlice';
 
 interface User {
@@ -22,16 +23,10 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     addUser: (state, action: PayloadAction<User>) => {
-      state.name = action.payload.name;
-      state.id = action.payload.id;
-      state.activated = action.payload.activated;
-      state.email = action.payload.email;
-      state.isDeleted = action.payload.isDeleted;
+      Cookies.set('secret', action.payload.id);
+      return { ...state, ...action.payload };
     },
-    resetUser: () => {
-      console.log('resetUser');
-      return initialState;
-    },
+    resetUser: () => initialState,
   },
   extraReducers: (builder) => {
     builder.addCase(resetAll, () => initialState);
