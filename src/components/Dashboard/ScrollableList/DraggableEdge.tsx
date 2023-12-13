@@ -11,8 +11,8 @@ interface DraggableEdgeProps {
 
 function DraggableEdge(props: DraggableEdgeProps) {
   const { index, edge, moveEdge } = props;
-  const dragRef = React.useRef(null);
-  const dropRef = React.useRef(null);
+  const dragRef = React.useRef<HTMLLIElement | null>(null);
+  const dropRef = React.useRef<HTMLLIElement | null>(null);
 
   const [, drag] = useDrag({
     type: 'EDGE',
@@ -38,6 +38,10 @@ function DraggableEdge(props: DraggableEdgeProps) {
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
 
       const clientOffset = monitor.getClientOffset();
+      if (!clientOffset) {
+        return; // Проверка на null
+      }
+
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
       if (
@@ -67,6 +71,5 @@ function DraggableEdge(props: DraggableEdgeProps) {
     </Box>
   );
 }
-
 
 export default DraggableEdge;

@@ -1,27 +1,26 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { Button } from '@mui/material';
 import { useQuery } from '@apollo/client';
-import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { userSelector } from '../../redux/feature/userSlice';
 import { GET_USER_NODES } from '../../apollo/user';
-import { useAppSelector, useAppDispatch } from '../../redux/hooks';
-import resetAll from '../../redux/feature/resetAllSlice';
+import { useAppSelector } from '../../redux/hooks';
 import client from '../../apollo/client';
 import { UserData, Edge } from '../../apollo/interfaces';
 import EdgesListMemo from './ScrollableList/List';
 import useSortableList from '../../hooks/useSortableList';
 import LoadingIndicator from '../LoadingIndicator';
+import useAuthService from '../../hooks/useAuthService';
 
 function Dashboard() {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const user = useAppSelector(userSelector);
   const bottom = useRef(null);
   const STORAGE_KEY = 'sortableList';
   const FIRST = 5;
 
   const [isLoggedOut, setIsLoggedOut] = useState(false);
+  const { logout } = useAuthService();
   interface UserNodesQueryVariables {
     after: null | string;
     first: number;
@@ -136,13 +135,9 @@ function Dashboard() {
   }, [user, navigate]);
 
   const handleLogout = () => {
-    dispatch(resetAll());
-    Cookies.remove('refresh-token');
-    Cookies.remove('secret');
-    client.resetStore();
+    logout();
     setIsLoggedOut(true);
     navigate('/login');
-    localStorage.clear();
   };
 
   return (
