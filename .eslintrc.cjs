@@ -18,6 +18,7 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.node.json',
   },
+  ignorePatterns: ['jest.config.cjs'],
   plugins: ['react', '@typescript-eslint', 'prettier'],
   rules: {
     'no-shadow': ['off'],
