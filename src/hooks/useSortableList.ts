@@ -9,7 +9,7 @@ export const STORAGE_KEY = 'sortableList';
  * @param initialList
  */
 
-const useSortableList = <T>(initialList: T[]) => {
+const useSortableList = <T>(initialList: T[] | []) => {
   const [list, setList] = useState(initialList);
 
   useEffect(() => {
@@ -17,6 +17,7 @@ const useSortableList = <T>(initialList: T[]) => {
   }, [list]);
 
   const moveItem = (from: number, to: number) => {
+    if (list.length === 0) return;
     const updatedList = [...list];
     const [movedItem] = updatedList.splice(from, 1);
     updatedList.splice(to, 0, movedItem);

@@ -1,7 +1,6 @@
-// DraggableEdge.tsx
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { ListItem, ListItemText } from '@mui/material';
+import { Box, ListItem, ListItemText } from '@mui/material';
 import { Edge } from '../../../apollo/interfaces';
 
 interface DraggableEdgeProps {
@@ -57,13 +56,17 @@ function DraggableEdge(props: DraggableEdgeProps) {
   drag(drop(dragRef));
 
   return (
-    <ListItem ref={dropRef} disablePadding sx={{ height: '30vh' }}>
-      <ListItemText
-        ref={dragRef}
-        primary={edge.node.structureDefinition.title}
-      />
-    </ListItem>
+    <Box
+      component="section"
+      sx={{ p: 2, border: '1px dashed grey' }}
+      ref={dragRef}
+    >
+      <ListItem disablePadding sx={{ height: '30vh' }} ref={dropRef}>
+        <ListItemText primary={edge.node.structureDefinition.title} />
+      </ListItem>
+    </Box>
   );
 }
+
 
 export default DraggableEdge;

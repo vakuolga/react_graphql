@@ -3,9 +3,9 @@ import { Button } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { userSelector } from '../../redux/feature/userSlice';
 import { GET_USER_NODES } from '../../apollo/user';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
-import { userSelector } from '../../redux/feature/userSlice';
 import resetAll from '../../redux/feature/resetAllSlice';
 import client from '../../apollo/client';
 import { UserData, Edge } from '../../apollo/interfaces';
@@ -18,6 +18,8 @@ function Dashboard() {
   const dispatch = useAppDispatch();
   const user = useAppSelector(userSelector);
   const bottom = useRef(null);
+  const STORAGE_KEY = 'sortableList';
+  const FIRST = 5;
 
   const [isLoggedOut, setIsLoggedOut] = useState(false);
   interface UserNodesQueryVariables {
@@ -30,12 +32,14 @@ function Dashboard() {
   >(GET_USER_NODES, {
     variables: {
       after: null,
-      first: 10,
+      first: FIRST,
     },
   });
+  const localStorageData = JSON.parse(
+    localStorage.getItem(STORAGE_KEY) || '[]'
+  ) as Edge[];
   const { list, moveItem, setList } = useSortableList<Edge>(
-    JSON.parse(localStorage.getItem('sortableList')) ||
-      data?.Admin.Tree.GetContentNodes.edges
+    localStorageData || []
   );
 
   const updateList = useCallback(
@@ -44,7 +48,6 @@ function Dashboard() {
     },
     [setList]
   );
-
   const getHasNextPage = useCallback(
     (data: UserData) =>
       data ? data.Admin.Tree.GetContentNodes.pageInfo.hasNextPage : true,
@@ -66,14 +69,14 @@ function Dashboard() {
 
     if (nextPage && after !== null) {
       await fetchMore({
-        variables: { after, first: 10 },
+        variables: { after, first: FIRST },
         updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult) return previousResult;
 
           const newEdges = fetchMoreResult.Admin.Tree.GetContentNodes.edges;
           client.writeQuery({
             query: GET_USER_NODES,
-            variables: { after, first: 10 },
+            variables: { after, first: FIRST },
             data: {
               Admin: {
                 ...fetchMoreResult.Admin,

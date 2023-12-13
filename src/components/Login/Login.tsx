@@ -52,7 +52,7 @@ function Login() {
       },
     }
   );
-  const [login, { loading: loginLoading, error: loginError }] = useMutation<
+  const [login, { loading: loginLoading }] = useMutation<
     LoginData,
     LoginQueryVariables
   >(LOGIN, {
@@ -62,23 +62,23 @@ function Login() {
         password: formState.password,
       },
     },
-    onError: (loginError) => {
+    onError: (error) => {
       if (
-        loginError.message.includes(
+        error.message.includes(
           'auth_login_with_email_and_password_unspecified_auth'
         )
       ) {
         setFormError('Error: Invalid credentials');
       } else {
-        setFormError(`Error: ${loginError.message}`);
+        setFormError(`Error: ${error.message}`);
       }
     },
     onCompleted: (loginData) => {
       if (loginData) {
         Cookies.set(
           'refresh-token',
-          loginData.Auth.loginJwt.jwtTokens.refreshToken || ''
-          // { httpOnly: true, secure: true }
+          loginData.Auth.loginJwt.jwtTokens.refreshToken || '',
+          { /* httpOnly: true, */ secure: true }
         );
         dispatch(addJwtTokens(loginData.Auth.loginJwt.jwtTokens));
       }
@@ -111,7 +111,7 @@ function Login() {
         setData={setFormState}
         setError={setFormError}
       />
-      {formError ? (
+      {formError && (
         <Typography
           variant="overline"
           display="block"
@@ -120,15 +120,14 @@ function Login() {
         >
           {formError}
         </Typography>
-      ) : (
-        <Button
-          variant="outlined"
-          onClick={() => login()}
-          disabled={loginLoading}
-        >
-          Login
-        </Button>
       )}
+      <Button
+        variant="outlined"
+        onClick={() => login()}
+        disabled={loginLoading}
+      >
+        Login
+      </Button>
     </div>
   );
 }

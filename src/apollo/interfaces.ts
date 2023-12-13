@@ -1,15 +1,14 @@
 interface EdgeNode {
+  id: string;
   structureDefinition: {
     title: string;
   };
 }
 
 export interface Edge {
-  id: string;
   cursor: string;
   node: EdgeNode;
 }
-
 interface PageInfo {
   endCursor: string;
   hasNextPage: string;

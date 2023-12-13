@@ -16,7 +16,6 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     addJwtTokens: (state, action: PayloadAction<JwtTokens>) => {
-      console.log(action.payload.accessToken);
       return { ...state, ...action.payload };
     },
     resetAuth: () => initialState,
