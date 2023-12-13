@@ -2,6 +2,13 @@ import { useState, useEffect } from 'react';
 
 export const STORAGE_KEY = 'sortableList';
 
+/**
+ * Hook for handling provided list order and saving it to localStorage.
+ * Used for drag and drop order functionality in Dashboard component.
+ *
+ * @param initialList
+ */
+
 const useSortableList = <T>(initialList: T[]) => {
   const [list, setList] = useState(initialList);
 

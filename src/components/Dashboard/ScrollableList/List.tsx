@@ -2,8 +2,8 @@ import React from 'react';
 import { List, Typography } from '@mui/material';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Edge } from '../apollo/interfaces';
-import LoadingIndicator from './LoadingIndicator';
+import { Edge } from '../../../apollo/interfaces';
+import LoadingIndicator from '../../LoadingIndicator';
 import DraggableEdge from './DraggableEdge';
 
 interface EdgesListProps {
@@ -11,7 +11,7 @@ interface EdgesListProps {
   moveItem: (from: number, to: number) => void;
 }
 
-function EdgesList(props: EdgesListProps) {
+export function EdgesList(props: EdgesListProps) {
   const { edges } = props;
 
   if (!edges) return <LoadingIndicator />;

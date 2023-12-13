@@ -1,6 +1,14 @@
 import React from 'react';
 import { TextField, Box } from '@mui/material';
-import { LoginFormProps } from './interfaces';
+import { LoginFormProps } from '../interfaces';
+
+/**
+ * A component that renders a Login-Form and handles authentification.
+ *
+ * @param data email and password provided
+ * @param setData data SetStateAction provided by parent
+ * @param setError an error SetStateAction provided by parent
+ */
 
 function LoginForm(props: LoginFormProps) {
   const { data, setData, setError } = props;

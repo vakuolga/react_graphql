@@ -3,14 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Typography } from '@mui/material';
 import { useMutation, useLazyQuery } from '@apollo/client';
 import Cookies from 'js-cookie';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import LOGIN from '../apollo/auth';
-import { GET_USER } from '../apollo/user';
-import { addJwtTokens, authSelector } from '../redux/feature/authSlice';
-import { userSelector, addUser } from '../redux/feature/userSlice';
-import { LoginFormData } from './interfaces';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import LOGIN from '../../apollo/auth';
+import { GET_USER } from '../../apollo/user';
+import { addJwtTokens, authSelector } from '../../redux/feature/authSlice';
+import { userSelector, addUser } from '../../redux/feature/userSlice';
+import { LoginFormData } from '../interfaces';
 import LoginForm from './LoginForm';
-import LoadingIndicator from './LoadingIndicator';
+import LoadingIndicator from '../LoadingIndicator';
+
+/**
+ * A component that renders a Login-Form and handles authentification.
+ *
+ */
 
 function Login() {
   const navigate = useNavigate();

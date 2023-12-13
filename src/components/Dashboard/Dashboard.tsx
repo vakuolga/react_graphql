@@ -3,15 +3,15 @@ import { Button } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import { GET_USER_NODES } from '../apollo/user';
-import { useAppSelector, useAppDispatch } from '../redux/hooks';
-import { userSelector } from '../redux/feature/userSlice';
-import resetAll from '../redux/feature/resetAllSlice';
-import client from '../apollo/client';
-import { UserData, Edge } from '../apollo/interfaces';
-import EdgesListMemo from './List';
-import useSortableList from '../hooks/useSortableList';
-import LoadingIndicator from './LoadingIndicator';
+import { GET_USER_NODES } from '../../apollo/user';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
+import { userSelector } from '../../redux/feature/userSlice';
+import resetAll from '../../redux/feature/resetAllSlice';
+import client from '../../apollo/client';
+import { UserData, Edge } from '../../apollo/interfaces';
+import EdgesListMemo from './ScrollableList/List';
+import useSortableList from '../../hooks/useSortableList';
+import LoadingIndicator from '../LoadingIndicator';
 
 function Dashboard() {
   const navigate = useNavigate();

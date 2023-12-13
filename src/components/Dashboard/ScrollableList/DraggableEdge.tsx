@@ -2,7 +2,7 @@
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { ListItem, ListItemText } from '@mui/material';
-import { Edge } from '../apollo/interfaces';
+import { Edge } from '../../../apollo/interfaces';
 
 interface DraggableEdgeProps {
   edge: Edge;
