@@ -9,17 +9,15 @@ export interface Edge {
   cursor: string;
   node: EdgeNode;
 }
-interface PageInfo {
-  endCursor: string;
-  hasNextPage: string;
-}
-
-export interface UserData {
+export interface PageData {
   Admin: {
     Tree: {
       GetContentNodes: {
         edges: Edge[];
-        pageInfo: PageInfo;
+        pageInfo: {
+          endCursor: string;
+          hasNextPage: boolean;
+        };
       };
     };
   };
@@ -32,4 +30,11 @@ export interface AuthData {
       refreshToken: string;
     };
   };
+}
+
+// !!
+
+export interface UserNodesQueryVariables {
+  after: null | string;
+  first: number;
 }

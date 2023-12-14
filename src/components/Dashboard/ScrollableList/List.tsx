@@ -27,7 +27,7 @@ export function EdgesList(props: EdgesListProps) {
       <List>
         {edges.map((edge: Edge, index: number) => (
           <DraggableEdge
-            key={edge.node.id}
+            key={edge.node.id + index}
             edge={edge}
             index={index}
             moveEdge={moveItem}

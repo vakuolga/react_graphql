@@ -11,23 +11,16 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ],
-  overrides: [
-    {
-      files: ['*.tsx', '*.ts'],
-      rules: {
-        '@typescript-eslint/no-shadow': 'off',
-        'no-shadow': 'off',
-        'no-param-reassign': 'off',
-      },
-    },
-  ],
+  overrides: [],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: './tsconfig.node.json',
   },
   ignorePatterns: ['jest.config.cjs'],
   plugins: ['react', '@typescript-eslint', 'prettier'],
-  rules: {},
+  rules: {
+    'no-shadow': ['off'],
+    'no-param-reassign': ['off'],
+  },
 };

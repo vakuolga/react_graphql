@@ -16,8 +16,8 @@ const useAuthService = () => {
   const [getUser, { loading: userLoading, error: userError }] = useLazyQuery(
     GET_USER,
     {
-      onCompleted: (userData) => {
-        const currentUser = userData.Viewer.Auth.currentUser.user;
+      onCompleted: (PageData) => {
+        const currentUser = PageData.Viewer.Auth.currentUser.user;
         dispatch(addUser(currentUser));
       },
     }

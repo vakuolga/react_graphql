@@ -39,7 +39,7 @@ function DraggableEdge(props: DraggableEdgeProps) {
 
       const clientOffset = monitor.getClientOffset();
       if (!clientOffset) {
-        return; // Проверка на null
+        return;
       }
 
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;
