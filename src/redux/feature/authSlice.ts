@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import resetAll from './resetAllSlice';
+import { resetAll } from './resetAllSlice';
 
 interface JwtTokens {
   accessToken: null | string;

@@ -11,7 +11,7 @@ import { userSelector } from '../../redux/feature/userSlice';
 
 function Login() {
   const navigate = useNavigate();
-  const { userLoading, userError, login, getUser } = useAuthService(); // Добавлен tokens
+  const { userLoading, userError, login, getUser } = useAuthService();
   const [formError, setFormError] = useState('');
   const [formState, setFormState] = useState<LoginFormData>({
     email: undefined,
@@ -19,7 +19,7 @@ function Login() {
   });
 
   const user = useAppSelector(userSelector);
-  const authTokens = useAppSelector(authSelector); // Добавлен authTokens
+  const authTokens = useAppSelector(authSelector);
 
   useEffect(() => {
     if (authTokens.accessToken) getUser();

@@ -1,4 +1,3 @@
-// authService.ts
 import Cookies from 'js-cookie';
 import { useLazyQuery } from '@apollo/client';
 import { useAppDispatch } from '../redux/hooks';
@@ -9,6 +8,11 @@ import { GET_USER } from '../apollo/user';
 import LOGIN from '../apollo/auth';
 import { addUser } from '../redux/feature/userSlice';
 import { LoginFormData } from '../components/interfaces';
+
+/**
+ * Hook for handling authentification
+ *
+ */
 
 const useAuthService = () => {
   const dispatch = useAppDispatch();
@@ -44,7 +48,7 @@ const useAuthService = () => {
         dispatch(addJwtTokens(data.Auth.loginJwt.jwtTokens));
         getUser();
       }
-    } catch (error) {
+    } catch (error: any) {
       if (
         error.message.includes(
           'auth_login_with_email_and_password_unspecified_auth'

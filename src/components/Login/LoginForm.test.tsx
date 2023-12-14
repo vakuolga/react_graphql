@@ -20,7 +20,7 @@ describe('LoginForm', () => {
       />
     );
 
-    // Проверяем, что компонент отрисован без ошибок
+    // Check that the component is rendered without errors
     expect(screen.getByLabelText(/Your E-Mail/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Your Password/i)).toBeInTheDocument();
   });
@@ -41,30 +41,28 @@ describe('LoginForm', () => {
       />
     );
 
-    // Вводим некорректный email
+    // Enter an incorrect E-Mail
     fireEvent.change(screen.getByLabelText(/Your E-Mail/i), {
       target: { value: 'invalidEmail' },
     });
 
-    // Проверяем, что setError был вызван с соответствующим сообщением
+    // Check that setError was called with the appropriate message
     expect(mockSetError).toHaveBeenCalledWith(
       'Your E-Mail Format is incorrect'
     );
 
-    // Вводим корректный email
+    // Enter a correct email
     fireEvent.change(screen.getByLabelText(/Your E-Mail/i), {
       target: { value: 'valid@email.com' },
     });
 
-    // Проверяем, что setError был вызван с пустым сообщением
+     // Check that setError was called with an empty message
     expect(mockSetError).toHaveBeenCalledWith('');
 
-    // Проверяем, что setData был вызван с корректным значением email
+     // Check that setData was called with the correct email value
     expect(mockSetData).toHaveBeenCalledWith({
       ...mockData,
       email: 'valid@email.com',
     });
   });
-
-  // Тесты для других вариантов использования можно добавить по необходимости
 });

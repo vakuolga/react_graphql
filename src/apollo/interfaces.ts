@@ -32,8 +32,6 @@ export interface AuthData {
   };
 }
 
-// !!
-
 export interface UserNodesQueryVariables {
   after: null | string;
   first: number;

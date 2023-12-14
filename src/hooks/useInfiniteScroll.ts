@@ -1,17 +1,18 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Edge, PageData } from '../apollo/interfaces';
-import { UserNodesQueryVariables } from '../apollo/interfaces';
 import client from '../apollo/client';
 import { GET_USER_NODES } from '../apollo/user';
-import { FetchMoreFunction } from '@apollo/client/react/hooks/useSuspenseQuery';
+import { UseInfiniteScrollProps } from './interfaces';
 
-interface UseInfiniteScrollProps {
-  setList: React.Dispatch<React.SetStateAction<Edge[] | []>>;
-  isLoggedOut: boolean;
-  fetchMore: FetchMoreFunction<PageData, UserNodesQueryVariables>;
-  FIRST: number;
-  data: PageData | undefined;
-}
+/**
+ * Hook for handling requests triggered by infinite scroll.
+ *
+ * @param setList update sortable list
+ * @param isLoggedOut
+ * @param fetchMore ApolloClient function
+ * @param FIRST const defined in Dashboard
+ * @param data data obtained on request success
+ */
 
 const useInfiniteScroll = (props: UseInfiniteScrollProps) => {
   const { setList, isLoggedOut, fetchMore, FIRST, data } = props;
@@ -67,7 +68,7 @@ const useInfiniteScroll = (props: UseInfiniteScrollProps) => {
               },
             },
           });
-          updateList(newEdges); // Обновление списка в Dashboard
+          updateList(newEdges);
           return {
             Admin: {
               ...previousResult.Admin,

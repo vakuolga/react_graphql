@@ -16,7 +16,7 @@ const BASE_URL = 'https://staging.api.constellation.academy';
 export const getRefreshToken = async () => {
   const refreshToken = Cookies.get('refresh-token');
   const accountId = Cookies.get('secret');
-  if (!refreshToken || !accountId) return '';
+  if (!refreshToken || !accountId) return undefined;
 
   try {
     const response = await fetch(`${BASE_URL}/api/refresh-token`, {
@@ -33,7 +33,6 @@ export const getRefreshToken = async () => {
 
     const data = await response.json();
     store.dispatch(addJwtTokens(data));
-    // Вернем новые токены
     return {
       accessToken: data.accessToken,
       refreshToken: data.refreshToken,
@@ -63,16 +62,16 @@ const createErrorLink = () => {
   return onError(({ graphQLErrors, operation, forward }) => {
     if (graphQLErrors) {
       graphQLErrors.forEach((err) => {
-        if (err.extensions?.code === 'jwt token expired') {
+        if (err.extensions?.code === 'UNAUTHENTICATED') {
           return new Observable((observer) => {
             getRefreshToken()
-              .then(
-                (newTokens: { accessToken: string; refreshToken: string }) => {
+              .then((newTokens) => {
+                if (newTokens) {
                   const oldHeaders = operation.getContext().headers;
                   operation.setContext({
                     headers: {
                       ...oldHeaders,
-                      authorization: newTokens && newTokens.accessToken,
+                      authorization: newTokens.accessToken,
                     },
                   });
                   const subscriber = {
@@ -81,8 +80,12 @@ const createErrorLink = () => {
                     complete: observer.complete.bind(observer),
                   };
                   forward(operation).subscribe(subscriber);
+                } else {
+                  observer.error(
+                    new Error('Error: Missing refreshToken or accountId')
+                  );
                 }
-              )
+              })
               .catch((refreshError) => {
                 observer.error(refreshError);
               });
