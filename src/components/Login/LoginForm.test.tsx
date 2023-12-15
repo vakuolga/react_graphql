@@ -43,7 +43,7 @@ describe('LoginForm', () => {
 
     // Enter an incorrect E-Mail
     fireEvent.change(screen.getByLabelText(/Your E-Mail/i), {
-      target: { value: 'invalidEmail' },
+      target: { value: '@invalidEmail.com' },
     });
 
     // Check that setError was called with the appropriate message

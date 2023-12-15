@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
-import { resetAll } from './resetAllSlice';
+import resetAll from './resetAllSlice';
 
 interface User {
   name: null | string;

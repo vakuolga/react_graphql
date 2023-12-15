@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@mui/material';
-import { useQuery } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { userSelector } from '../../redux/feature/userSlice';
 import { GET_USER_NODES } from '../../apollo/user';
-import { useAppSelector, useAppDispatch } from '../../redux/hooks';
+import { useAppSelector } from '../../redux/hooks';
 import { PageData, Edge } from '../../apollo/interfaces';
 import EdgesListMemo from './ScrollableList/List';
 import useSortableList from '../../hooks/useSortableList';
@@ -12,6 +11,7 @@ import LoadingIndicator from '../LoadingIndicator';
 import useAuthService from '../../hooks/useAuthService';
 import { UserNodesQueryVariables } from '../../apollo/interfaces';
 import useInfiniteScroll from '../../hooks/useInfiniteScroll';
+import { useQuery } from '@apollo/client';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -19,9 +19,7 @@ function Dashboard() {
   const bottom = useRef(null);
   const STORAGE_KEY = 'sortableList';
   const FIRST = 5;
-  const {logout} = useAuthService();
-
-  const [isLoggedOut, setIsLoggedOut] = useState(false);
+  const {logout, isLoggedOut, setIsLoggedOut} = useAuthService();
 
   useEffect(() => {
     if (!user.name) {
@@ -30,8 +28,8 @@ function Dashboard() {
   }, [user, navigate]);
 
   const handleLogout = () => {
-    setIsLoggedOut(true);
     logout();
+    setIsLoggedOut(true);
     navigate('/login');
   };
 
@@ -66,7 +64,7 @@ function Dashboard() {
   }, [data, fetchMore, loadMore, isLoggedOut]);
 
   return (
-    <>
+    <div data-testid="loading">
       <Button variant="outlined" onClick={() => handleLogout()}>
         Logout
       </Button>
@@ -74,7 +72,7 @@ function Dashboard() {
       <EdgesListMemo edges={list && list} moveItem={moveItem} />
       {loading && <LoadingIndicator />}
       <div ref={bottom} />
-    </>
+    </div>
   );
 }
 

@@ -10,6 +10,7 @@ import { setContext } from '@apollo/client/link/context';
 import Cookies from 'js-cookie';
 import { store } from '../redux/store';
 import { addJwtTokens } from '../redux/feature/authSlice';
+import fetch from 'cross-fetch';
 
 const BASE_URL = 'https://staging.api.constellation.academy';
 
@@ -45,6 +46,7 @@ export const getRefreshToken = async () => {
 
 const httpLink = new HttpLink({
   uri: `${BASE_URL}/api/graphql`,
+  fetch,
   credentials: 'include',
 });
 

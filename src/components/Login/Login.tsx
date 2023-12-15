@@ -66,6 +66,7 @@ function Login() {
         variant="outlined"
         onClick={() => login(formState)}
         disabled={userLoading}
+        data-testid="login-button"
       >
         Login
       </Button>

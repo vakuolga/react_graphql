@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 
 function LoadingIndicator() {
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex' }} data-testid="loading">
       <CircularProgress />
     </Box>
   );

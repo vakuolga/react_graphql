@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Cookies from 'js-cookie';
 import { useLazyQuery } from '@apollo/client';
 import { useAppDispatch } from '../redux/hooks';
@@ -17,6 +18,7 @@ import { LoginFormData } from '../components/interfaces';
 const useAuthService = () => {
   const dispatch = useAppDispatch();
 
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
   const [getUser, { loading: userLoading, error: userError }] = useLazyQuery(
     GET_USER,
     {
@@ -69,7 +71,15 @@ const useAuthService = () => {
     localStorage.clear();
   };
 
-  return { userLoading, userError, login, logout, getUser };
+  return {
+    userLoading,
+    userError,
+    login,
+    logout,
+    getUser,
+    isLoggedOut,
+    setIsLoggedOut,
+  };
 };
 
 export default useAuthService;

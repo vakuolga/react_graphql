@@ -4,8 +4,9 @@ module.exports = {
   transformIgnorePatterns: [
     '/node_modules/(?!(react-dnd)/)'
   ],
-  moduleNameMapper: {
-    'react-dnd-test-utils': 'react-dnd-test-backend',
+  "moduleNameMapper": {
+    "^.+\\.svg$": "jest-svg-transformer",
+    "^.+\\.(css|less|scss)$": "identity-obj-proxy"
   },
   globals: {
     'ts-jest': {
