@@ -45,6 +45,7 @@ function LoginForm(props: LoginFormProps) {
         label="Your E-Mail"
         variant="outlined"
         autoComplete="email"
+        data-testid="email-input"
         onChange={(event: React.ChangeEvent) => {
           handleChangeEmail((event.target as HTMLInputElement).value);
         }}
@@ -56,6 +57,7 @@ function LoginForm(props: LoginFormProps) {
         label="Your Password"
         variant="outlined"
         autoComplete="current-password"
+        data-testid="password-input"
         onChange={(event: React.ChangeEvent) =>
           setData({
             ...data,

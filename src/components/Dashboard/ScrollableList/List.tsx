@@ -23,7 +23,7 @@ export function EdgesList(props: EdgesListProps) {
     );
   const { moveItem } = props;
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={HTML5Backend} >
       <List>
         {edges.map((edge: Edge, index: number) => (
           <DraggableEdge

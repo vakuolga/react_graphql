@@ -9,8 +9,8 @@ describe('LoginForm', () => {
       email: '',
       password: '',
     };
-    const mockSetData = jest.fn();
-    const mockSetError = jest.fn();
+    const mockSetData = vi.fn()
+    const mockSetError = vi.fn()
 
     render(
       <LoginForm
@@ -30,8 +30,8 @@ describe('LoginForm', () => {
       email: '',
       password: '',
     };
-    const mockSetData = jest.fn();
-    const mockSetError = jest.fn();
+    const mockSetData = vi.fn()
+    const mockSetError = vi.fn()
 
     render(
       <LoginForm

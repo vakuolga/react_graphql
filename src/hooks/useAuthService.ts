@@ -51,6 +51,7 @@ const useAuthService = () => {
         getUser();
       }
     } catch (error: any) {
+      console.error('Login error:', error);
       if (
         error.message.includes(
           'auth_login_with_email_and_password_unspecified_auth'
