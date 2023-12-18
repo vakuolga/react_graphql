@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@mui/material';
+import { Button, Box, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { userSelector } from '../../redux/feature/userSlice';
 import { GET_USER_NODES } from '../../apollo/user';
@@ -12,6 +12,7 @@ import useAuthService from '../../hooks/useAuthService';
 import { UserNodesQueryVariables } from '../../apollo/interfaces';
 import useInfiniteScroll from '../../hooks/useInfiniteScroll';
 import { useQuery } from '@apollo/client';
+import Typography from '@mui/material/Typography';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ function Dashboard() {
     navigate('/login');
   };
 
-  const { data, loading, fetchMore } = useQuery<
+  const { data, loading, error, fetchMore } = useQuery<
     PageData,
     UserNodesQueryVariables
   >(GET_USER_NODES, {
@@ -54,6 +55,7 @@ function Dashboard() {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
+        console.log('isIntersecting')
         if (!isLoggedOut) loadMore();
       }
     });
@@ -64,15 +66,19 @@ function Dashboard() {
   }, [data, fetchMore, loadMore, isLoggedOut]);
 
   return (
-    <div data-testid="loading">
-      <Button variant="outlined" onClick={() => handleLogout()}>
-        Logout
-      </Button>
-      <h2>{user?.name || 'No username'}</h2>
+    <Container>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button variant="outlined" onClick={() => handleLogout()}>
+          Logout
+        </Button>
+      </Box>
+      <Typography variant="h5" gutterBottom>
+       {user?.name ? `Dahboard of ${user?.name}` : `No username`}
+      </Typography>
       <EdgesListMemo edges={list && list} moveItem={moveItem} />
       {loading && <LoadingIndicator />}
-      <div ref={bottom} />
-    </div>
+      <div ref={bottom} data-testid="bottom" />
+    </Container>
   );
 }
 

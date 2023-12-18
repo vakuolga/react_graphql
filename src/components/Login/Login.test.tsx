@@ -11,6 +11,7 @@ import Login from './Login';
 import {renderHook} from '@testing-library/react'
 import useAuthService from '../../hooks/useAuthService';
 import { act } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 
 type Props = {
   children: JSX.Element
@@ -63,6 +64,9 @@ const mocks = [
     },
   },
 ];
+
+const history = createMemoryHistory();
+
 describe('LoginComponent', () => {
   test('handles authentification', async () => {
     const mockData = {
@@ -103,15 +107,20 @@ describe('LoginComponent', () => {
         </BrowserRouter>
       </Provider>
     );
+    const { result } = renderHook(() => useAuthService(), {wrapper});
     await act(async () => {
       // Используем renderHook для вызова хука
-      const { result } = renderHook(() => useAuthService().login(
+      result.current.login(
         {
           email: 'example@email.com',
           password: 'securePassword123',
         }
-      ), {wrapper});
+      );
       console.log('result', result.current);
+      // Wait for asynchronous operations to complete
+      await waitFor(() => {
+        expect(screen.getByText('Dashboard')).toBeInTheDocument();
+      });
     });
   });
 })
