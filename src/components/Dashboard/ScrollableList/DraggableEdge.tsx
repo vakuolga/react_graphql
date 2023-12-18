@@ -61,11 +61,12 @@ function DraggableEdge(props: DraggableEdgeProps) {
 
   return (
     <Box
+      data-testid="draggable-edge"
       component="section"
       sx={{ p: 2, border: '1px dashed grey' }}
       ref={dragRef}
     >
-      <ListItem disablePadding sx={{ height: '30vh' }} ref={dropRef}>
+      <ListItem disablePadding sx={{ height: '30vh' }} data-testid="drop-target" ref={dropRef}>
         <ListItemText primary={edge.node.structureDefinition.title} />
       </ListItem>
     </Box>

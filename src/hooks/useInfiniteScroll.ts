@@ -35,7 +35,6 @@ const useInfiniteScroll = (props: UseInfiniteScrollProps) => {
     []
   );
   const loadMore = useCallback(async () => {
-    console.log('isLoggedOut', isLoggedOut);
     if (isLoggedOut) return;
     const nextPage = getHasNextPage(data);
     const after = getAfter(data);

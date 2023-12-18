@@ -5,9 +5,10 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import App from './App';
 import './index.css';
-import client, { getRefreshToken } from './apollo/client';
+import client from './apollo/client';
+import { getRefreshToken } from './apollo/client/utils';
 
-getRefreshToken();
+if (store.getState().auth.refreshToken) getRefreshToken();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

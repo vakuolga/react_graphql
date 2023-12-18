@@ -55,7 +55,6 @@ function Dashboard() {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        console.log('isIntersecting')
         if (!isLoggedOut) loadMore();
       }
     });
