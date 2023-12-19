@@ -7,8 +7,9 @@ import App from './App';
 import './index.css';
 import client from './apollo/client';
 import { getRefreshToken } from './apollo/client/utils';
+import Cookies from 'js-cookie';
 
-if (store.getState().auth.refreshToken) getRefreshToken();
+if (Cookies.get('refreshToken')) getRefreshToken();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

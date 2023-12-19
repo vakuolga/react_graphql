@@ -8,6 +8,7 @@ import LoadingIndicator from '../LoadingIndicator';
 import useAuthService from '../../hooks/useAuthService';
 import { authSelector } from '../../redux/feature/authSlice';
 import { userSelector } from '../../redux/feature/userSlice';
+import { Container } from '@mui/material';
 
 function Login() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ function Login() {
   }, [user, navigate]);
 
   return (
-    <div>
+    <Container>
       <Typography variant="h5" display="block" gutterBottom>
         Login
       </Typography>
@@ -70,7 +71,7 @@ function Login() {
       >
         Login
       </Button>
-    </div>
+    </Container>
   );
 }
 
