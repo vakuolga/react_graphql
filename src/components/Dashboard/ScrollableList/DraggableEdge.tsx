@@ -3,7 +3,6 @@ import { useDrag, useDrop } from 'react-dnd';
 import { Box, ListItem, ListItemText } from '@mui/material';
 import { DraggableEdgeProps } from '../../interfaces';
 
-
 function DraggableEdge(props: DraggableEdgeProps) {
   const { index, edge, moveEdge } = props;
   const dragRef = React.useRef<HTMLLIElement | null>(null);
@@ -61,7 +60,12 @@ function DraggableEdge(props: DraggableEdgeProps) {
       sx={{ p: 2, border: '1px dashed grey' }}
       ref={dragRef}
     >
-      <ListItem disablePadding sx={{ height: '30vh' }} data-testid="drop-target" ref={dropRef}>
+      <ListItem
+        disablePadding
+        sx={{ height: '30vh' }}
+        data-testid="drop-target"
+        ref={dropRef}
+      >
         <ListItemText primary={edge.node.structureDefinition.title} />
       </ListItem>
     </Box>

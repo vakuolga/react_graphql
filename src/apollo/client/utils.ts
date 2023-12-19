@@ -1,9 +1,9 @@
 import Cookies from 'js-cookie';
 import { addJwtTokens } from '../../redux/feature/authSlice';
 import { store } from '../../redux/store';
-import { BASE_URL } from './links/links';
+import BASE_URL from './links/links';
 
-export const getRefreshToken = async () => {
+const getRefreshToken = async () => {
   const refreshToken = Cookies.get('refresh-token');
   const accountId = Cookies.get('secret');
   if (!refreshToken || !accountId) return undefined;
@@ -32,3 +32,5 @@ export const getRefreshToken = async () => {
     throw error;
   }
 };
+
+export default getRefreshToken;

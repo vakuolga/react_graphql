@@ -6,7 +6,7 @@ import resetAll from '../redux/feature/resetAllSlice';
 import client from '../apollo/client';
 import { addJwtTokens } from '../redux/feature/authSlice';
 import { GET_USER } from '../apollo/user';
-import LOGIN from '../apollo/auth';
+import { LOGIN } from '../apollo/auth';
 import { addUser } from '../redux/feature/userSlice';
 import { LoginFormData } from '../components/interfaces';
 
@@ -50,6 +50,8 @@ const useAuthService = () => {
         dispatch(addJwtTokens(data.Auth.loginJwt.jwtTokens));
         getUser();
       }
+      // Catch clause variable type annotation must be 'any' or 'unknown' if specified.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error('Login error:', error);
       if (

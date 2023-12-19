@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
 import errorLink from './client/links/errorLink';
 import authLink from './client/links/authLink';
-import { BASE_URL } from './client/links/links';
+import BASE_URL from './client/links/links';
 
 /**
  * Client

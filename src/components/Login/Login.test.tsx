@@ -9,8 +9,8 @@ describe('LoginForm', () => {
       email: '',
       password: '',
     };
-    const mockSetData = vi.fn()
-    const mockSetError = vi.fn()
+    const mockSetData = vi.fn();
+    const mockSetError = vi.fn();
 
     render(
       <LoginForm
@@ -30,8 +30,8 @@ describe('LoginForm', () => {
       email: '',
       password: '',
     };
-    const mockSetData = vi.fn()
-    const mockSetError = vi.fn()
+    const mockSetData = vi.fn();
+    const mockSetError = vi.fn();
 
     render(
       <LoginForm
@@ -56,10 +56,10 @@ describe('LoginForm', () => {
       target: { value: 'valid@email.com' },
     });
 
-     // Check that setError was called with an empty message
+    // Check that setError was called with an empty message
     expect(mockSetError).toHaveBeenCalledWith('');
 
-     // Check that setData was called with the correct email value
+    // Check that setData was called with the correct email value
     expect(mockSetData).toHaveBeenCalledWith({
       ...mockData,
       email: 'valid@email.com',

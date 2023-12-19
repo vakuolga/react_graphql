@@ -1,4 +1,6 @@
-import React, { useCallback } from 'react';
+/* Needs to be disabled for apollo client hooks to run smoothly with args */
+/* eslint-disable @typescript-eslint/no-shadow */
+import { useCallback } from 'react';
 import { Edge, PageData } from '../apollo/interfaces';
 import client from '../apollo/client';
 import { GET_USER_NODES } from '../apollo/user';
@@ -88,7 +90,15 @@ const useInfiniteScroll = (props: UseInfiniteScrollProps) => {
         },
       });
     }
-  }, [data, fetchMore, getHasNextPage, getAfter, isLoggedOut, updateList]);
+  }, [
+    data,
+    fetchMore,
+    getHasNextPage,
+    getAfter,
+    isLoggedOut,
+    updateList,
+    FIRST,
+  ]);
 
   return { loadMore };
 };

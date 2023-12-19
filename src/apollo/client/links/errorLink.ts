@@ -1,6 +1,6 @@
 import { Observable } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
-import { getRefreshToken } from '../utils';
+import getRefreshToken from '../utils';
 
 const createErrorLink = () => {
   return onError(({ graphQLErrors, operation, forward }) => {

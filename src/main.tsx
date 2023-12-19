@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ApolloProvider } from '@apollo/client';
 import { Provider } from 'react-redux';
+import Cookies from 'js-cookie';
 import { store } from './redux/store';
 import App from './App';
 import './index.css';
 import client from './apollo/client';
-import { getRefreshToken } from './apollo/client/utils';
-import Cookies from 'js-cookie';
+import getRefreshToken from './apollo/client/utils';
 
 if (Cookies.get('refreshToken')) getRefreshToken();
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Edge } from '../apollo/interfaces';
+
 export interface LoginFormData {
   email: undefined | string;
   password: undefined | string;

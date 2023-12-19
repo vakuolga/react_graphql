@@ -7,7 +7,6 @@ import LoadingIndicator from '../../LoadingIndicator';
 import DraggableEdge from './DraggableEdge';
 import { EdgesListProps } from '../../interfaces';
 
-
 export function EdgesList(props: EdgesListProps) {
   const { edges } = props;
 
@@ -20,10 +19,12 @@ export function EdgesList(props: EdgesListProps) {
     );
   const { moveItem } = props;
   return (
-    <DndProvider backend={HTML5Backend} >
+    <DndProvider backend={HTML5Backend}>
       <List>
         {edges.map((edge: Edge, index: number) => (
           <DraggableEdge
+            // disabled because has repeating ids in the array
+            // eslint-disable-next-line react/no-array-index-key
             key={edge.node.id + index}
             edge={edge}
             index={index}

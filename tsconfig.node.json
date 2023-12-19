@@ -7,5 +7,5 @@
     "jsx": "react",
     "lib": ["es2015", "DOM"]
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", ".eslintrc.cjs"]
 }

@@ -1,18 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Button, Box, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import Typography from '@mui/material/Typography';
 import { userSelector } from '../../redux/feature/userSlice';
 import { GET_USER_NODES } from '../../apollo/user';
 import { useAppSelector } from '../../redux/hooks';
-import { PageData, Edge } from '../../apollo/interfaces';
+import {
+  PageData,
+  Edge,
+  UserNodesQueryVariables,
+} from '../../apollo/interfaces';
 import EdgesListMemo from './ScrollableList/List';
 import useSortableList from '../../hooks/useSortableList';
 import LoadingIndicator from '../LoadingIndicator';
 import useAuthService from '../../hooks/useAuthService';
-import { UserNodesQueryVariables } from '../../apollo/interfaces';
 import useInfiniteScroll from '../../hooks/useInfiniteScroll';
-import { useQuery } from '@apollo/client';
-import Typography from '@mui/material/Typography';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -20,7 +23,7 @@ function Dashboard() {
   const bottom = useRef(null);
   const STORAGE_KEY = 'sortableList';
   const FIRST = 5;
-  const {logout, isLoggedOut, setIsLoggedOut} = useAuthService();
+  const { logout, isLoggedOut, setIsLoggedOut } = useAuthService();
 
   useEffect(() => {
     if (!user.name) {
@@ -34,7 +37,7 @@ function Dashboard() {
     navigate('/login');
   };
 
-  const { data, loading, error, fetchMore } = useQuery<
+  const { data, loading, fetchMore } = useQuery<
     PageData,
     UserNodesQueryVariables
   >(GET_USER_NODES, {
@@ -49,8 +52,12 @@ function Dashboard() {
   const { list, moveItem, setList } = useSortableList<Edge>(
     localStorageData || []
   );
-  const {loadMore} = useInfiniteScroll({
-    setList, isLoggedOut, fetchMore, FIRST, data
+  const { loadMore } = useInfiniteScroll({
+    setList,
+    isLoggedOut,
+    fetchMore,
+    FIRST,
+    data,
   });
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -72,7 +79,7 @@ function Dashboard() {
         </Button>
       </Box>
       <Typography variant="h5" gutterBottom>
-       {user?.name ? `Dahboard of ${user?.name}` : `No username`}
+        {user?.name ? `Dahboard of ${user?.name}` : `No username`}
       </Typography>
       <EdgesListMemo edges={list && list} moveItem={moveItem} />
       {loading && <LoadingIndicator />}
