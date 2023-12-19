@@ -1,12 +1,6 @@
-import {
-  Observable,
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-  from,
-} from '@apollo/client';
-import ErrorLink from './client/links/errorLink';
-import AuthLink from './client/links/authLink';
+import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
+import errorLink from './client/links/errorLink';
+import authLink from './client/links/authLink';
 import { BASE_URL } from './client/links/links';
 
 /**
@@ -20,7 +14,7 @@ export const httpLink = new HttpLink({
 });
 
 const client = new ApolloClient({
-  link: from([ErrorLink, AuthLink, httpLink]),
+  link: from([errorLink, authLink, httpLink]),
   cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {

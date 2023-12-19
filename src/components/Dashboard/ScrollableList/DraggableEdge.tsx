@@ -1,13 +1,8 @@
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { Box, ListItem, ListItemText } from '@mui/material';
-import { Edge } from '../../../apollo/interfaces';
+import { DraggableEdgeProps } from '../../interfaces';
 
-interface DraggableEdgeProps {
-  edge: Edge;
-  index: number;
-  moveEdge: (from: number, to: number) => void;
-}
 
 function DraggableEdge(props: DraggableEdgeProps) {
   const { index, edge, moveEdge } = props;

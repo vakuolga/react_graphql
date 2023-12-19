@@ -5,11 +5,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Edge } from '../../../apollo/interfaces';
 import LoadingIndicator from '../../LoadingIndicator';
 import DraggableEdge from './DraggableEdge';
+import { EdgesListProps } from '../../interfaces';
 
-interface EdgesListProps {
-  edges: Edge[];
-  moveItem: (from: number, to: number) => void;
-}
 
 export function EdgesList(props: EdgesListProps) {
   const { edges } = props;

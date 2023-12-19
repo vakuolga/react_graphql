@@ -7,11 +7,11 @@ Welcome to my React + GraphQL project. It showcases advanced proficiency in Reac
 ## Task Description
 
 1. Create a frontend React app and configure GraphQL.
-2. Provide a login form for the user to interact with and log in.
+2. Provide a login form for the user to interact with and to log in.
 3. Show the username and list user-specific contentNodes after a successful login.
 4. Provide an option for a user to log out.
 5. Lazy loading of nodes is implemented as the user scrolls to the end of the list.
-6. Maximum performance optimization is achieved using Memoization Techniques.
+6. Maximum performance optimization is achieved using memoization techniques.
 7. List sorting is implemented, and it is achieved via drag-and-drop.
 8. Sorted list persists after a page reload.
 

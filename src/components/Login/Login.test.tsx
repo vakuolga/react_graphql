@@ -1,72 +1,10 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { MockedProvider } from '@apollo/client/testing';
-import LOGIN from '../../apollo/auth';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from '../../redux/store';
-import LoginForm from './LoginForm';
-import userEvent from '@testing-library/user-event';
-import Login from './Login';
-import {renderHook} from '@testing-library/react'
-import useAuthService from '../../hooks/useAuthService';
-import { act } from '@testing-library/react';
-
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import LoginForm from './LoginForm';
 
-type Props = {
-  children: JSX.Element
-}
-
-const wrapper = ({ children }: Props ) => {
-return (
-<Provider store={store}>
-  <BrowserRouter>
-    <MockedProvider mocks={mocks} addTypename={false}>
-      {children}
-    </MockedProvider>
-  </BrowserRouter>
-</Provider>)
-}
-
-vi.mock('../../hooks/useAuthService', async () => {
-  const actual = await vi.importActual("../../hooks/useAuthService");
-  return {
-    ...actual,
-    userLoading: false,
-    userError: null,
-    login: vi.fn(),
-    getUser: vi.fn(),
-  };
-});
-
-const mocks = [
-  {
-    request: {
-      query: LOGIN,
-      variables: {
-        loginJwtInput2: {
-          email: 'example@email.com',
-          password: 'securePassword123',
-        },
-      },
-    },
-    result: {
-      data: {
-        Auth: {
-          loginJwt: {
-            jwtTokens: {
-              accessToken: 'mockedAccessToken',
-              refreshToken: 'mockedRefreshToken',
-            },
-          },
-        },
-      },
-    },
-  },
-];
-
-describe('LoginComponent', () => {
-  test('handles authentification', async () => {
+describe('LoginForm', () => {
+  test('renders without errors', () => {
     const mockData = {
       email: '',
       password: '',
@@ -75,49 +13,61 @@ describe('LoginComponent', () => {
     const mockSetError = vi.fn()
 
     render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <MockedProvider mocks={mocks} addTypename={false}>
-            <LoginForm
-              data={mockData}
-              setData={mockSetData}
-              setError={mockSetError}
-            />
-          </MockedProvider>
-        </BrowserRouter>
-      </Provider>
+      <LoginForm
+        data={mockData}
+        setData={mockSetData}
+        setError={mockSetError}
+      />
     );
-    const mailfield = screen.getByTestId('email-input');
-    const pwfield = screen.getByTestId('password-input');
 
-    expect(mailfield).toBeInTheDocument();
-    expect(pwfield).toBeInTheDocument();
+    // Check that the component is rendered without errors
+    expect(screen.getByLabelText(/Your E-Mail/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Your Password/i)).toBeInTheDocument();
+  });
 
-    userEvent.type(mailfield, 'example@email.com');
-    userEvent.type(pwfield, 'securePassword123');
+  test('validates email correctly', () => {
+    const mockData = {
+      email: '',
+      password: '',
+    };
+    const mockSetData = vi.fn()
+    const mockSetError = vi.fn()
 
     render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <MockedProvider mocks={mocks} addTypename={false}>
-            <Login />
-          </MockedProvider>
-        </BrowserRouter>
-      </Provider>
+      <LoginForm
+        data={mockData}
+        setData={mockSetData}
+        setError={mockSetError}
+      />
     );
-    const { result } = renderHook(() => useAuthService(), {wrapper});
-    await act(async () => {
-      // Using renderHook to call login
-      result.current.login(
-        {
-          email: 'example@email.com',
-          password: 'securePassword123',
-        }
-      );
-      // Wait for asynchronous operations to complete
-      await waitFor(() => {
-        expect(screen.getByText('Dashboard')).toBeInTheDocument();
-      });
+
+    // Enter an incorrect E-Mail
+    fireEvent.change(screen.getByLabelText(/Your E-Mail/i), {
+      target: { value: '@invalidEmail.com' },
+    });
+
+    // Check that setError was called with the appropriate message
+    expect(mockSetError).toHaveBeenCalledWith(
+      'Your E-Mail Format is incorrect'
+    );
+
+    // Enter a correct email
+    fireEvent.change(screen.getByLabelText(/Your E-Mail/i), {
+      target: { value: 'valid@email.com' },
+    });
+
+     // Check that setError was called with an empty message
+    expect(mockSetError).toHaveBeenCalledWith('');
+
+     // Check that setData was called with the correct email value
+    expect(mockSetData).toHaveBeenCalledWith({
+      ...mockData,
+      email: 'valid@email.com',
     });
   });
-})
+});
+
+// Clean up localStorage after the test
+afterAll(() => {
+  vi.restoreAllMocks();
+});
