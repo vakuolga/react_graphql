@@ -49,6 +49,7 @@ function LoginForm(props: LoginFormProps) {
         onChange={(event: React.ChangeEvent) => {
           handleChangeEmail((event.target as HTMLInputElement).value);
         }}
+        sx={{ margin: '8px 0!important' }}
       />
       <TextField
         required
@@ -64,6 +65,7 @@ function LoginForm(props: LoginFormProps) {
             password: (event.target as HTMLInputElement).value,
           })
         }
+        sx={{ margin: '8px 0!important' }}
       />
     </Box>
   );
