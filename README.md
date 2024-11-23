@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to my React + GraphQL project. It showcases advanced proficiency in React, Redux, React Router, and Apollo Client. Testing is orchestrated with Testing-Library and Vitest. The primary goal is to prove skills in managing these technologies. The details of the tasks are outlined below.
+Welcome to my React + GraphQL project. It showcases use of React, Redux, React Router, and Apollo Client. Testing is orchestrated with Testing-Library and Vitest. 
 
 ## Task Description
 
